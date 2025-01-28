@@ -1,0 +1,7 @@
+model_name: "llama-3.1"
+model_path: "simplification_models/model-500-steps-training-persona-4-persona-lex+synt"
+max_seq_length: 2048
+load_in_4bit: true
+rabbitmq_host: "localhost"
+queue_name: "llama_queue"
+

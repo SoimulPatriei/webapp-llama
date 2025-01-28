@@ -1,0 +1,33 @@
+# Ignore system files
+.DS_Store
+
+# Ignore Python bytecode and cache files
+__pycache__/
+*.py[cod]
+
+# Ignore log files
+*.log
+
+# Ignore temporary files
+*.tmp
+*.swp
+
+# Ignore environment files
+.env
+.venv/
+
+# Ignore model files
+OpenNMT/models/*.pt
+OpenNMT/models/*.zip
+
+# Ignore build artifacts and Docker-related cache
+*.out
+*.o
+build/
+node_modules/
+dist/
+docker-compose.override.yml
+
+# Ignore unnecessary files in the project directory
+*.bak
+*.old

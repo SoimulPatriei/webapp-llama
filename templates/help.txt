@@ -1,0 +1,30 @@
+{
+  "en": {
+    "introduction": "Introduction",
+    "introText": "This is a demo of a prototype Estonian sentence simplification application, developed as part of the EKTB55 project: Text Simplification for Estonian. The simplifier is based on LLaMA 3.1, fine-tuned using a dataset of manually and automatically simplified sentences extracted from Estonian Wikipedia.",
+    "howItWorksTitle": "How It Works:",
+    "step1": "1. Input a sentence in Estonian and press Simplify. The sentence will be automatically simplified by the system.",
+    "step2": "2. Edit Simplification. If you are a native Estonian speaker, we encourage you to review the simplified sentence and improve it if necessary.",
+    "step3": "3. Press Save. Your corrections will be saved in our database to help improve the tool.",
+    "creditsTitle": "Credits:",
+    "developer": "Developer",
+    "curation": "Dataset Curation",
+    "developerName": "Eduard Barbu",
+    "curationName": "Meeri-Ly Muru",
+    "thankYou": "Thank you for contributing to the development of Estonian language technologies!"
+  },
+  "et": {
+    "introduction": "Sissejuhatus",
+    "introText": "See on prototüübi demoversioon Eesti lause lihtsustamise rakendusest, mis on välja töötatud EKTB55 projekti raames: Teksti lihtsustamine Eesti keeles. Lihtsustaja põhineb LLaMA 3.1 mudelil, mis on peenhäälestatud käsitsi ja automaatselt lihtsustatud lausetega, mis on võetud Eesti Wikipediast.",
+    "howItWorksTitle": "Kuidas see töötab:",
+    "step1": "1. Sisestage lause eesti keeles ja vajutage Lihtsusta. Süsteem lihtsustab lause automaatselt.",
+    "step2": "2. Muutke lihtsustamist. Kui olete eesti keelt emakeelena kõnelev isik, soovitame üle vaadata lihtsustatud lause ja seda vajadusel täiustada.",
+    "step3": "3. Vajutage Salvesta. Teie parandused salvestatakse meie andmebaasis, et aidata tööriista täiustada.",
+    "creditsTitle": "Autorid:",
+    "developer": "Arendaja",
+    "curation": "Andmestiku kureerimine",
+    "developerName": "Eduard Barbu",
+    "curationName": "Meeri-Ly Muru",
+    "thankYou": "Aitäh, et aitate kaasa Eesti keele tehnoloogiate arendamisele!"
+  }
+}

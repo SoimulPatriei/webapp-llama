@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estonian Text Simplification</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #222; /* Dark background for better contrast */
+      color: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+    } 
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: #333;  /* Darker background for the main container */
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      color: #f0f0f0;
+    }
+
+    .flags {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .flags img {
+      width: 40px;
+      height: auto;
+      cursor: pointer;
+    }
+    
+    .help-button {
+    	position: fixed; /* Fixed position to stay on the right */
+  		top: 20px; /* Distance from the top */
+  		right: 20px; /* Distance from the right */
+  		background-color: #FF9800; /* Button color */
+  		color: white;
+  		border: none;
+  		border-radius: 8px;
+  		padding: 10px 15px; /* Smaller padding for size */
+  		font-size: 14px; /* Smaller font size */
+  		cursor: pointer;
+  		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  		z-index: 1000; /* Ensure it appears on top */
+  		width: auto; /* Ensure button is not stretched */
+  		}
+  		
+      .help-button:hover {
+    	background-color: #e67e22; /* Slightly darker orange on hover */
+      }
+      
+      .help-button:active {
+  		background-color: #d35400; /* Even darker on click */
+  		}
+		
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000; /* Ensure it appears on top */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8); /* Black background with transparency */
+}
+
+.modal-content {
+  background-color: #333;
+  margin: 15% auto; /* Center the modal vertically and horizontally */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+  border-radius: 10px;
+  color: #f0f0f0;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+.simplification-section {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.simplification-box {
+  flex: 1;
+  padding: 20px;
+  background-color: #444;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  color: #f0f0f0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+
+    
+
+    h1 {
+      text-align: center;
+      color: #fff; /* White text for good contrast */
+    }
+
+    textarea {
+      width: 100%;
+      height: 150px;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 5px 0;
+    }
+
+    .llama-button {
+      background-color: #FF9800;
+      color: white;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    #outputText {
+      width: 100%;
+      height: 100px;
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: #444;
+      color: #f0f0f0;
+      resize: none;
+    }
+
+    #outputText[readonly] {
+      background-color: #444; /* Gray for non-editable */
+    }
+
+    #loadingSpinner {
+      display: none;
+      margin: auto;
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 30px;
+      background-color: #444; /* Darker background for the logo section */
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .logo-container img {
+      max-width: 150px;
+      margin: 0 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="flags">
+      <img src="{{ url_for('static', filename='estonia-flag.png') }}" alt="Estonian" onclick="setLanguage('et')">
+      <img src="{{ url_for('static', filename='uk-flag.png') }}" alt="English" onclick="setLanguage('en')">
+    </div>
+    
+    <button class="help-button" onclick="showHelp()">Help</button>
+
+ 
+    
+    <h1 id="title">Estonian Text Simplification</h1>
+    <textarea id="inputText" placeholder="Input sentence here ..."></textarea>
+    <button class="llama-button" onclick="llamaSimplifyText()">Simplify</button>
+
+    <div id="outputTextContainer">
+      <textarea id="outputText" readonly placeholder="Simplified Sentence will appear here..."></textarea>
+      <button id="editButton" onclick="enableEditing()">Edit Simplification</button>
+      <button id="saveButton" style="display: none;" onclick="saveEditedSimplification()">Save</button>
+    </div>
+    
+   
+
+    <div id="loadingSpinner">
+      <div style="
+        width: 50px;
+        height: 50px;
+        border: 4px solid #ccc;
+        border-top: 4px solid #FF9800;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;">
+      </div>
+    </div>
+
+    <div class="simplification-section">
+  <!-- Lexical Simplification Box -->
+  <div class="simplification-box" id="lexicalBox">
+    <h2 id="lexicalTitle">1. Lexical Simplification</h2>
+    <p id="lexicalDesc">Complex words are replaced with simpler ones with similar meanings.</p>
+    <p><strong id="lexicalOrig">Original:</strong> Kõik on kriminaalkoodeksi ees võrdsed.</p>
+    <p><strong id="lexicalSimple">Simplified:</strong> Kõik on seaduse ees võrdsed.</p>
+  </div>
+
+  <!-- Syntactic Simplification Box -->
+  <div class="simplification-box" id="syntacticBox">
+    <h2 id="syntacticTitle">2. Syntactic Simplification</h2>
+    <p id="syntacticDesc">Sentence structure and grammar are modified to make the text easier to understand.</p>
+    <p><strong id="syntacticOrig">Original:</strong> Poiss kui sportlane on heas vormis.</p>
+    <p><strong id="syntacticSimple">Simplified:</strong> Poiss on sportlane. Poiss on heas vormis.</p>
+  </div>
+</div>
+
+    <!-- Logos -->
+    <div class="logo-container">
+      <img src="{{ url_for('static', filename='tartunlp-darkbg_orig.png') }}" alt="Tartu University Logo">
+      <img src="{{ url_for('static', filename='fb-sinine-est.png') }}" alt="FB Logo">
+    </div>
+    
+ 
+<div id="helpModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeHelp()">&times;</span>
+    <h2 id="helpTitle">Help</h2>
+    <p id="helpContent">This is a placeholder for the help content.</p>
+  </div>
+</div>
+
+  <script>
+    const translations = {
+      et: {
+        title: "Teksti lihtsustamine",
+        lexicalTitle: "1. Leksikaalne lihtsustamine",
+        lexicalDesc: "Keerukad sõnad asendatakse lihtsamatega, millel on sarnane tähendus.",
+        lexicalOrig: "Esialgne:",
+        lexicalSimple: "Lihtsustatud:",
+        syntacticTitle: "2. Süntaktiline lihtsustamine",
+        syntacticDesc: "Muudetakse lause struktuuri ja grammatikat, et muuta tekst arusaadavamaks ja lihtsamini jälgitavaks.",
+        syntacticOrig: "Esialgne:",
+        syntacticSimple: "Lihtsustatud:",
+        inputPlaceholder: "Sisestage tekst siia...",
+        outputPlaceholder: "Tulemus kuvatakse siin..."
+      },
+      en: {
+        title: "Estonian Text Simplification",
+        lexicalTitle: "1. Lexical Simplification",
+        lexicalDesc: "Complex words are replaced with simpler ones with similar meanings.",
+        lexicalOrig: "Original:",
+        lexicalSimple: "Simplified:",
+        syntacticTitle: "2. Syntactic Simplification",
+        syntacticDesc: "Sentence structure and grammar are modified to make the text easier to understand.",
+        syntacticOrig: "Original:",
+        syntacticSimple: "Simplified:",
+        inputPlaceholder: "Enter text here...",
+        outputPlaceholder: "Output will appear here..."
+      }
+    };
+
+   function setLanguage(lang) {
+  const elements = translations[lang];
+  document.documentElement.lang = lang; // Set the document's language attribute
+  for (const id in elements) {
+    const element = document.getElementById(id);
+    if (id === 'inputText') {
+      element.placeholder = elements.inputPlaceholder;
+    } else if (id === 'outputText') {
+      element.placeholder = elements.outputPlaceholder;
+    } else if (element) {
+      element.innerText = elements[id];
+    }
+  }
+}
+
+   function showSpinner() {
+  document.getElementById('loadingSpinner').style.display = 'block';
+}
+
+function closeHelp() {
+    document.getElementById('helpModal').style.display = 'none';
+  }
+
+function showHelp() {
+  console.log('Help button clicked, modal should appear.');
+
+  // Use the document language as the default
+  const lang = document.documentElement.lang || 'en';
+
+  // Fetch the help content based on the selected language
+  fetch(`/get_help?lang=${lang}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Extract the nested helpContent
+      const helpData = data.helpContent;
+
+      // Update the help modal with the fetched content
+      document.getElementById('helpTitle').innerText = helpData.introduction;
+      document.getElementById('helpContent').innerHTML = `
+        <p>${helpData.introText}</p>
+        <h3>${helpData.howItWorksTitle}</h3>
+        <ul>
+          <li>${helpData.step1}</li>
+          <li>${helpData.step2}</li>
+          <li>${helpData.step3}</li>
+        </ul>
+        <h3>${helpData.creditsTitle}</h3>
+        <p>${helpData.developer}: ${helpData.developerName}</p>
+        <p>${helpData.curation}: ${helpData.curationName}</p>
+        <p>${helpData.thankYou}</p>
+      `;
+
+      // Display the help modal
+      document.getElementById('helpModal').style.display = 'block';
+    })
+    .catch(error => {
+      // Handle errors by showing a default error message
+      console.error('Error fetching help content:', error);
+      document.getElementById('helpContent').innerText = 'Error loading help content. Please try again later.';
+      document.getElementById('helpModal').style.display = 'block';
+    });
+}
+
+
+
+
+    
+    function hideSpinner() {
+      document.getElementById('loadingSpinner').style.display = 'none';
+    }
+
+    function enableEditing() {
+      const outputText = document.getElementById('outputText');
+      outputText.removeAttribute('readonly');
+      outputText.focus();
+      document.getElementById('saveButton').style.display = 'inline-block';
+    }
+
+    function saveEditedSimplification() {
+      const outputText = document.getElementById('outputText');
+      const editedText = outputText.value;
+      const originalText = outputText.dataset.original;
+
+      fetch('/save_simplification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          original_sentence: document.getElementById('inputText').value,
+          original: originalText,
+          edited: editedText
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert('Simplification saved successfully!');
+        outputText.setAttribute('readonly', true);
+        document.getElementById('saveButton').style.display = 'none';
+      })
+      .catch(error => {
+        alert('Error saving simplification: ' + error);
+      });
+    }
+  </script>
+  <script src="{{ url_for('static', filename='simplification.js') }}"></script>
+  
+
+</body>
+</html>
