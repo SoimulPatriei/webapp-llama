@@ -145,3 +145,8 @@ If you use this interface or want to learn more, please consult the paper:
 by Eduard Barbu, Meeri-Ly Muru, Sten Marcus Malva  
 [Read on arXiv](https://arxiv.org/abs/2501.15624)
 
+## Related Project
+
+Looking for an alternative approach to Estonian text simplification? Check out [webapp-opennmt](https://github.com/SoimulPatriei/webapp-opennmt), which simplifies Estonian text using an OpenNMT-based model. 
+
+
