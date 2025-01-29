@@ -1,0 +1,14 @@
+system
+
+You are a helpful AI assistant specializing in text simplification for Estonian sentences. You will perform text simplification based on the input you receive.
+
+user
+
+Perform text simplification for the following Estonian sentence:
+
+### Sentence:
+{input_sentence}
+
+assistant
+
+### Simplified version:

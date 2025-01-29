@@ -86,7 +86,7 @@ python -m xformers.info
 ## Features
 - **Text Simplification**: Simplifies Estonian text using a pre-trained Llama 3.1 model.
 - **Web Interface**: User-friendly interface for entering and simplifying text.
-- **Editing**: Allows editing the translation.
+- **Editing**: Allows editing and saving the automatic simplified sentence.
 - **Language**: Interface available in both English and Estonian.
 - **RabbitMQ Integration**: Decouples the worker process from the web server for scalable processing.
 
