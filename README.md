@@ -131,6 +131,16 @@ python -m xformers.info
 
 ---
 
+## Standalone Scripts
+
+1. **`standalone_scripts/`**: This directory contains scripts for fine-tuning and simplifying Estonian sentences without using the web interface.
+   - **`train_llama_model.ipynb`**: A Jupyter notebook for fine-tuning Llama 3.1 on `simplification_training_set.json`, available on [Hugging Face](https://huggingface.co/datasets/vulturuldemare/Estonian-Text-Simplification).
+   - **`simplify_estonian_sentences_with_saved_model.ipynb`**: A Jupyter notebook for simplifying new Estonian sentences using a trained model.
+
+The Colab notebooks have been tested on **Google Colab with an L4 GPU**. Input files should be placed in your **Google Drive**, and the file paths should be updated accordingly in the scripts.
+
+---
+
 ## Credits
 
 - **Application Programming**: Eduard Barbu  
